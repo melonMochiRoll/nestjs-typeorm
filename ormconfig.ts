@@ -7,9 +7,9 @@ export const ormConfig: TypeOrmModuleOptions = {
   type: 'mysql',
   host: 'localhost',
   port: 3306,
-  username: process.env.USERNAME,
-  password: process.env.PASSWORD,
-  database: process.env.DATABASE,
+  username: process.env.ADMINID,
+  password: process.env.ADMINPASSWORD,
+  database: process.env.ADMINDATABASE,
   entities: [
     User,
   ],
