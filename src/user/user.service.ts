@@ -1,7 +1,7 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import bcrypt from 'bcrypt';
-import { EXIST_EMAIL, SALT_OR_ROUNDS } from 'src/common/constants';
+import { ApiHttpResponse, SALT_OR_ROUNDS } from 'src/common';
 import { User } from 'src/entities';
 import { Repository } from 'typeorm';
 
@@ -19,23 +19,15 @@ export class UserService {
   ) {
     const user = await this.UserRepository.findOne({ email });
     if (user) {
-      throw new HttpException(EXIST_EMAIL, 401);
+      throw new HttpException(ApiHttpResponse, 401);
     }
 
     const hashedPassword = await bcrypt.hash(password, SALT_OR_ROUNDS);
-    const data = await this.UserRepository.save({
+    await this.UserRepository.save({
       email,
       nickname,
       password: hashedPassword });
 
     return true;
-  }
-
-  async logIn() {
-
-  }
-
-  async logOut() {
-
   }
 }

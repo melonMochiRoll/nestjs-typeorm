@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
-import { UserDecorator } from 'src/common/decorators';
+import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
+import type { Request, Response } from 'express';
+import { AuthGuard } from '@nestjs/passport';
+import { UserDecorator } from 'src/common';
 import { User } from 'src/entities';
-import { UserService } from '.';
-import { CreateUserDto } from './dto/create.user.dto';
+import { UserService, CreateUserDto } from '.';
 
 @Controller('api/user')
 export class UserController {
@@ -19,13 +20,15 @@ export class UserController {
     return this.userService.createUser(body.email, body.nickname, body.password);
   }
 
+  @UseGuards(AuthGuard('local'))
   @Post('login')
-  logIn() {
-    
+  logIn(@UserDecorator() user: User) {
+    return user;
   }
 
-  @Post('logout')
-  logOut() {
-
+  @Get('logout')
+  logOut(@Req() req: Request, @Res() res: Response): void {
+    req.logout();
+    res.redirect('/');
   }
 }
