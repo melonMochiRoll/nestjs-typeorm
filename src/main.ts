@@ -16,8 +16,6 @@ async function bootstrap() {
   app.use(helmet() );
 
   app.use(cookieParser() );
-  app.use(passport.initialize());
-  app.use(passport.session());
   app.use(session({
       secret: process.env.COOKIE_SECRET,
       resave: false,
@@ -26,6 +24,8 @@ async function bootstrap() {
         httpOnly: true
       }
     }));
+  app.use(passport.initialize());
+  app.use(passport.session());
 
   const port = process.env.PORT || 3005;
   await app.listen(port);
