@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import type { Request, Response } from 'express';
-import { AuthGuard } from '@nestjs/passport';
-import { UserDecorator } from 'src/common';
+import { LocalAuthGuard, UserDecorator } from 'src/common';
 import { User } from 'src/entities';
-import { UserService, CreateUserDto } from '.';
+import { CreateUserDto } from './dto';
+import { UserService } from './user.service';
 
 @Controller('api/user')
 export class UserController {
@@ -11,7 +11,7 @@ export class UserController {
     private userService: UserService ) {}
 
   @Get()
-  getUser(@UserDecorator() user: User) {
+  getUser(@UserDecorator() user: User): User | false {
     return user || false;
   }
 
@@ -20,7 +20,7 @@ export class UserController {
     return this.userService.createUser(body.email, body.nickname, body.password);
   }
 
-  @UseGuards(AuthGuard('local'))
+  @UseGuards(LocalAuthGuard)
   @Post('login')
   logIn(@UserDecorator() user: User) {
     return user;
