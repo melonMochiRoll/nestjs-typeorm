@@ -1,6 +1,8 @@
 import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import type { Request, Response } from 'express';
-import { LocalAuthGuard, UserDecorator } from 'src/common';
+import { AuthService } from 'src/auth';
+import { UserDecorator } from 'src/common/decorators';
+import { JwtAuthGuard, LocalAuthGuard } from 'src/common/guards'
 import { User } from 'src/entities';
 import { CreateUserDto } from './dto';
 import { UserService } from './user.service';
@@ -8,10 +10,17 @@ import { UserService } from './user.service';
 @Controller('api/user')
 export class UserController {
   constructor(
-    private userService: UserService ) {}
+    private userService: UserService,
+    private authService: AuthService ) {}
 
   @Get()
   getUser(@UserDecorator() user: User): User | false {
+    return user || false;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('jwt')
+  getJwt(@UserDecorator() user: User): User | false {
     return user || false;
   }
 
@@ -22,8 +31,14 @@ export class UserController {
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  logIn(@UserDecorator() user: User) {
+  logIn(@UserDecorator() user: User): User | false {
     return user;
+  }
+
+  @UseGuards(LocalAuthGuard)
+  @Post('jwt/login')
+  jwtLogIn(@UserDecorator() user: User): { access_token: string } {
+    return this.authService.signJwt(user);
   }
 
   @Get('logout')
