@@ -11,11 +11,23 @@ import { UserService } from './user.service';
 export class UserController {
   constructor(
     private userService: UserService,
-    private authService: AuthService ) {}
+    private authService: AuthService,
+    ) {}
 
   @Get()
   getUser(@UserDecorator() user: User): User | false {
     return user || false;
+  }
+
+  // @UseGuards(LocalAuthGuard)
+  // @Post('login')
+  // logIn(@UserDecorator() user: User): User | false {
+  //   return user;
+  // }
+
+  @Post()
+  createUser(@Body() body: CreateUserDto) {
+    return this.userService.createUser(body.email, body.nickname, body.password);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -24,21 +36,12 @@ export class UserController {
     return user || false;
   }
 
-  @Post()
-  createUser(@Body() body: CreateUserDto) {
-    return this.userService.createUser(body.email, body.nickname, body.password);
-  }
-
-  @UseGuards(LocalAuthGuard)
-  @Post('login')
-  logIn(@UserDecorator() user: User): User | false {
-    return user;
-  }
-
   @UseGuards(LocalAuthGuard)
   @Post('jwt/login')
-  jwtLogIn(@UserDecorator() user: User): { access_token: string } {
-    return this.authService.signJwt(user);
+  async jwtLogIn(@UserDecorator() user: User, @Res({ passthrough: true }) res: Response) {
+    const token = await this.authService.signJwt(user);
+    res.cookie('Authorization', token.access_token);
+    return token;
   }
 
   @Get('logout')
