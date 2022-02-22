@@ -9,8 +9,8 @@ import { AuthService } from './auth.service';
 @Module({
   imports: [
     JwtModule.register({
-      secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: 900 },
+      secret: `${process.env.JWT_SECRET}`,
+      signOptions: { expiresIn: 1200 },
     }),
     TypeOrmModule.forFeature([ User ]),
     PassportModule.register({ session: true }) ],
