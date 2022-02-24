@@ -1,7 +1,7 @@
 import type { Request } from 'express';
 import { Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
-import { ExtractJwt, Strategy } from "passport-jwt";
+import { Strategy } from "passport-jwt";
 import { JwtPayload, Payload } from "src/common/interfaces/payload.interface";
 
 const cookieExtractor = (request: Request) => {
@@ -23,6 +23,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: JwtPayload): Promise<Payload> {
-    return { userId: payload.sub, email: payload.username, role: payload.role }
+    return { userId: payload.sub, nickname: payload.username, role: payload.role }
   }
 }

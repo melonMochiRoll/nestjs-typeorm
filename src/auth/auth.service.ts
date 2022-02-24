@@ -15,13 +15,13 @@ export class AuthService {
 
   async validateUser(email: string, password: string) {
     const user = await this.userRepository.findOne({ email },
-      { select: [ 'id', 'email', 'nickname', 'password'] });
+      { select: [ 'id', 'email', 'nickname', 'password', 'role'] });
 
     if (!user) {
       return null;
     }
 
-    const compare = bcrypt.compare(password, user.password);
+    const compare = await bcrypt.compare(password, user.password);
     if (compare) {
       const { password, ...result } = user;
       return result;
@@ -29,8 +29,8 @@ export class AuthService {
     return null;
   }
 
-  signJwt(user: User): { access_token: string } {
-    const payload: JwtPayload = { sub: `${user.id}`, username: user.email, role: user.role };
+  async signJwt(user: User) {
+    const payload: JwtPayload = { sub: `${user.id}`, username: user.nickname, role: user.role };
     return {
       access_token: this.jwtService.sign(payload),
     };
