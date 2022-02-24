@@ -37,7 +37,7 @@ export class UserController {
   }
 
   @UseGuards(LocalAuthGuard)
-  @Post('jwt/login')
+  @Post('login')
   async jwtLogIn(@UserDecorator() user: User, @Res({ passthrough: true }) res: Response) {
     const token = await this.authService.signJwt(user);
     res.cookie('Authorization', token.access_token);
