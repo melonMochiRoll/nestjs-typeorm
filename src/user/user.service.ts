@@ -11,6 +11,22 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private UserRepository: Repository<User> ) {}
+
+  async verifyEmail(email: string) {
+    const user = await this.UserRepository.findOne({ email }, {
+      select: ['email'],
+    });
+    const result = user ? true : false;
+    return result;
+  }
+
+  async verifyNickname(nickname: any) {
+    const user = await this.UserRepository.findOne({ nickname }, {
+      select: ['nickname'],
+    });
+    const result = user ? true : false;
+    return result;
+  }
   
   async createUser(
     email: string,

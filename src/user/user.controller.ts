@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
 import type { Request, Response } from 'express';
 import { AuthService } from 'src/auth';
 import { UserDecorator } from 'src/common/decorators';
@@ -13,6 +13,16 @@ export class UserController {
     private userService: UserService,
     private authService: AuthService,
     ) {}
+
+  @Get('email')
+  verifyEmail(@Query('email') email: string) {
+    return this.userService.verifyEmail(email);
+  }
+
+  @Get('nickname')
+  verifyNickname(@Query('nickname') nickname: string) {
+    return this.userService.verifyNickname(nickname);
+  }
 
   @Post()
   createUser(@Body() body: CreateUserDto) {
