@@ -13,8 +13,6 @@ import { UserModule } from './user/user.module';
     AuthModule,
     UserModule,
   ],
-  controllers: [ ],
-  providers: [ ],
 })
 
 export class AppModule implements NestModule {
