@@ -16,5 +16,5 @@ export const ormConfig: TypeOrmModuleOptions = {
   autoLoadEntities: true,
   charset: 'utf8mb4',
   keepConnectionAlive: true,
-  synchronize: true,
+  synchronize: false,
 }
