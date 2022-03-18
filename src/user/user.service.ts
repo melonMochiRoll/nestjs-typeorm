@@ -5,6 +5,7 @@ import { SALT_OR_ROUNDS } from 'src/common/constants';
 import { ApiHttpResponse } from 'src/common/enums';
 import { User } from 'src/entities';
 import { Repository } from 'typeorm';
+import { CreateUserDto } from './dto';
 
 @Injectable()
 export class UserService {
@@ -28,11 +29,9 @@ export class UserService {
     return result;
   }
   
-  async createUser(
-    email: string,
-    nickname: string,
-    password: string
-  ) {
+  async createUser(createUserDto: CreateUserDto) {
+    const { email, nickname, password } = createUserDto;
+    
     const user = await this.UserRepository.findOne({ email });
     if (user) {
       throw new HttpException(ApiHttpResponse.EXIST_EMAIL, 401);

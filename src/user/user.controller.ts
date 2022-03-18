@@ -25,8 +25,8 @@ export class UserController {
   }
 
   @Post()
-  createUser(@Body() body: CreateUserDto) {
-    return this.userService.createUser(body.email, body.nickname, body.password);
+  createUser(@Body() createUserDto: CreateUserDto) {
+    return this.userService.createUser(createUserDto);
   }
 
   @UseGuards(JwtAuthGuard)
