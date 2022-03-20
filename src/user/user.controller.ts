@@ -30,14 +30,14 @@ export class UserController {
     return this.userService.createUser(createUserDto);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('jwt')
+  @UseGuards(JwtAuthGuard)
   getJwt(@UserDecorator() user: User): User | false {
     return user || false;
   }
 
-  @UseGuards(LocalAuthGuard)
   @Post('login')
+  @UseGuards(LocalAuthGuard)
   async jwtLogIn(@UserDecorator() user: User, @Res({ passthrough: true }) res: Response) {
     const token = await this.authService.signJwt(user);
     res.cookie('Authorization', token.access_token);
