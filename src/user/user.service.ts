@@ -34,7 +34,7 @@ export class UserService {
     
     const user = await this.UserRepository.findOne({ email });
     if (user) {
-      throw new HttpException(ApiHttpResponse.EXIST_EMAIL, 401);
+      throw new HttpException(ApiHttpResponse.EXIST_EMAIL, 400);
     }
 
     const hashedPassword = await bcrypt.hash(password, SALT_OR_ROUNDS);
