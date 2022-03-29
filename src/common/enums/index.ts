@@ -1,2 +1,2 @@
 export * from './user.role.enum';
-export * from './api.http.response.enum';
+export * from './user.http.response.message.enum';
