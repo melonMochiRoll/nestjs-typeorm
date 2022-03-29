@@ -15,18 +15,18 @@ export class UserController {
     ) {}
 
   @Get('email')
-  verifyEmail(@Query('email') email: string) {
-    return this.userService.verifyEmail(email);
+  findByEmail(@Query('email') email: string): Promise<User> {
+    return this.userService.findByEmail(email);
   }
 
   @Get('nickname')
-  verifyNickname(@Query('nickname') nickname: string) {
-    return this.userService.verifyNickname(nickname);
+  findByNickname(@Query('nickname') nickname: string): Promise<User> {
+    return this.userService.findByNickname(nickname);
   }
 
   @Post()
   @UsePipes(ValidationPipe)
-  createUser(@Body() createUserDto: CreateUserDto) {
+  createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.userService.createUser(createUserDto);
   }
 
