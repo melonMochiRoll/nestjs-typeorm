@@ -13,26 +13,33 @@ export class UserService {
     @InjectRepository(User)
     private UserRepository: Repository<User> ) {}
 
-  async findByEmail(email: string): Promise<User> {
+  async findByEmail(
+    email: string
+    ): Promise<User> {
     const user = await this.UserRepository.findOne({ email });
     if(!user) {
-      throw new NotFoundException(UserHttpResponseMessage.EXIST_EMAIL);
+      throw new NotFoundException(UserHttpResponseMessage.NOTEXIST_EMAIL);
     }
     return user;
   }
 
-  async findByNickname(nickname: any): Promise<User> {
+  async findByNickname(
+    nickname: string
+    ): Promise<User> {
     const user = await this.UserRepository.findOne({ nickname });
     if(!user) {
-      throw new NotFoundException(UserHttpResponseMessage.EXIST_NICKNAME);
+      throw new NotFoundException(UserHttpResponseMessage.NOTEXIST_NICKNAME);
     }
     return user;
   }
   
-  async createUser(createUserDto: CreateUserDto): Promise<User> {
-    const { email, nickname, password } = createUserDto;
+  async createUser({
+    email,
+    nickname,
+    password
+    }: CreateUserDto): Promise<User> {
     
-    const user = await this.findByEmail(email);
+    const user = await this.UserRepository.findOne({ email });
     if (user) {
       throw new HttpException(UserHttpResponseMessage.EXIST_EMAIL, 401);
     }
