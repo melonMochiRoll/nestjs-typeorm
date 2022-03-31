@@ -42,7 +42,12 @@ export class UserService {
     password
     }: CreateUserDto): Promise<User> {
     
-    const user = await this.UserRepository.findOne({ email });
+    const user = await this.UserRepository.findOne({
+      where: [
+        { email },
+        { nickname },
+      ]
+    });
     if (user) {
       throw new HttpException(UserHttpResponseMessageEnum.EXIST_EMAIL, 401);
     }
