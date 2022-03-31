@@ -1,4 +1,4 @@
-export enum UserHttpResponseMessage {
+export enum UserHttpResponseMessageEnum {
   EXIST_EMAIL = '이미 존재하는 이메일입니다.',
   NOTEXIST_EMAIL = '존재하지 않는 이메일입니다.',
   EXIST_NICKNAME = '이미 존재하는 닉네임입니다.',
