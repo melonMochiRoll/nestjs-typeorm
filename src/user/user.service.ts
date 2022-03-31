@@ -1,8 +1,8 @@
-import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, HttpException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import bcrypt from 'bcrypt';
 import { SALT_OR_ROUNDS } from 'src/common/constants';
-import { UserHttpResponseMessage } from 'src/common/enums';
+import { UserHttpResponseMessageEnum } from 'src/common/enums';
 import { User } from 'src/entities';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto';
@@ -13,24 +13,27 @@ export class UserService {
     @InjectRepository(User)
     private UserRepository: Repository<User> ) {}
 
-  async findByEmail(
-    email: string
+  async findByType(
+    type: string,
+    value: string
     ): Promise<User> {
-    const user = await this.UserRepository.findOne({ email });
-    if(!user) {
-      throw new NotFoundException(UserHttpResponseMessage.NOTEXIST_EMAIL);
+    if (type === 'email') {
+      const user = await this.UserRepository.findOne({ email: value });
+      if(!user) {
+        throw new UnauthorizedException(UserHttpResponseMessageEnum.NOTEXIST_EMAIL);
+      }
+      return user;
     }
-    return user;
-  }
 
-  async findByNickname(
-    nickname: string
-    ): Promise<User> {
-    const user = await this.UserRepository.findOne({ nickname });
-    if(!user) {
-      throw new NotFoundException(UserHttpResponseMessage.NOTEXIST_NICKNAME);
+    if (type === 'nickname') {
+      const user = await this.UserRepository.findOne({ nickname: value });
+      if(!user) {
+        throw new UnauthorizedException(UserHttpResponseMessageEnum.NOTEXIST_NICKNAME);
+      }
+      return user;
+    } else {
+      throw new ForbiddenException('잘못 된 접근 입니다.');
     }
-    return user;
   }
   
   async createUser({
@@ -41,7 +44,7 @@ export class UserService {
     
     const user = await this.UserRepository.findOne({ email });
     if (user) {
-      throw new HttpException(UserHttpResponseMessage.EXIST_EMAIL, 401);
+      throw new HttpException(UserHttpResponseMessageEnum.EXIST_EMAIL, 401);
     }
 
     const hashedPassword = await bcrypt.hash(password, SALT_OR_ROUNDS);

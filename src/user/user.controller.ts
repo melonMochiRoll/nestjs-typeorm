@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query, Req, Res, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Req, Res, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import type { Request, Response } from 'express';
 import { AuthService } from 'src/auth';
 import { UserDecorator } from 'src/common/decorators';
@@ -14,14 +14,12 @@ export class UserController {
     private authService: AuthService,
     ) {}
 
-  @Get('email')
-  findByEmail(@Query('email') email: string): Promise<User> {
-    return this.userService.findByEmail(email);
-  }
-
-  @Get('nickname')
-  findByNickname(@Query('nickname') nickname: string): Promise<User> {
-    return this.userService.findByNickname(nickname);
+  @Get()
+  findByType(
+    @Query('type') type: string,
+    @Query('value') value: string,
+    ): Promise<User> {
+    return this.userService.findByType(type, value);
   }
 
   @Post()
