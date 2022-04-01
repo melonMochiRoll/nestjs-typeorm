@@ -6,34 +6,18 @@ import { UserHttpResponseMessageEnum } from 'src/common/enums';
 import { User } from 'src/entities';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto';
+import { UserQueryRepository } from './user.query.repository';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
-    private UserRepository: Repository<User> ) {}
+    private userRepository: Repository<User>,
+    private userQueryRepository: UserQueryRepository,
+    ) {}
 
-  async findByType(
-    type: string,
-    value: string
-    ): Promise<User> {
-    if (type === 'email') {
-      const user = await this.UserRepository.findOne({ email: value });
-      if(!user) {
-        throw new UnauthorizedException(UserHttpResponseMessageEnum.NOTEXIST_EMAIL);
-      }
-      return user;
-    }
-
-    if (type === 'nickname') {
-      const user = await this.UserRepository.findOne({ nickname: value });
-      if(!user) {
-        throw new UnauthorizedException(UserHttpResponseMessageEnum.NOTEXIST_NICKNAME);
-      }
-      return user;
-    } else {
-      throw new ForbiddenException('잘못 된 접근 입니다.');
-    }
+  async findByType(value: string): Promise<User> {
+    return await this.userQueryRepository.findUser(value);
   }
   
   async createUser({
@@ -42,18 +26,18 @@ export class UserService {
     password
     }: CreateUserDto): Promise<User> {
     
-    const user = await this.UserRepository.findOne({
+    const user = await this.userRepository.findOne({
       where: [
         { email },
         { nickname },
       ]
     });
     if (user) {
-      throw new HttpException(UserHttpResponseMessageEnum.EXIST_EMAIL, 401);
+      throw new HttpException(UserHttpResponseMessageEnum.INVALID_JOIN, 401);
     }
 
     const hashedPassword = await bcrypt.hash(password, SALT_OR_ROUNDS);
-    const savedUser = await this.UserRepository.save({
+    const savedUser = await this.userRepository.save({
       email,
       nickname,
       password: hashedPassword });

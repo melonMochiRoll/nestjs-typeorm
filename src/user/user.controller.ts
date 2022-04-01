@@ -16,10 +16,9 @@ export class UserController {
 
   @Get()
   findByType(
-    @Query('type') type: string,
     @Query('value') value: string,
     ): Promise<User> {
-    return this.userService.findByType(type, value);
+    return this.userService.findByType(value);
   }
 
   @Post()
