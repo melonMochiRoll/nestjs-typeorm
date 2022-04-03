@@ -1,4 +1,4 @@
-import { ForbiddenException, HttpException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import bcrypt from 'bcrypt';
 import { SALT_OR_ROUNDS } from 'src/common/constants';
@@ -20,11 +20,8 @@ export class UserService {
     return await this.userQueryRepository.findUser(value);
   }
   
-  async createUser({
-    email,
-    nickname,
-    password
-    }: CreateUserDto): Promise<User> {
+  async createUser(createUserDto: CreateUserDto): Promise<User> {
+    const { email, nickname, password } = createUserDto;
     
     const user = await this.userRepository.findOne({
       where: [
