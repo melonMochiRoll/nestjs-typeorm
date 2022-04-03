@@ -7,7 +7,8 @@ import { EntityRepository, Repository } from "typeorm";
 export class UserQueryRepository extends Repository<User> {
   async findUser(value: string) {
     const queryBuilder = await this.createQueryBuilder()
-      .where('user.email = :email', { email: value })
+      .where('user.id = :id', { id: Number(value) })
+      .orWhere('user.email = :email', { email: value })
       .orWhere('user.nickname = :nickname', { nickname: value })
       .getOne();
       
