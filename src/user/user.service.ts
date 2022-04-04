@@ -14,12 +14,12 @@ export class UserService {
     private userRepository: Repository<User>,
     ) {}
 
-  // async findByType(value: string): Promise<User> {
-  //   return await this.userQueryRepository.findUser(value);
-  // }
-
   async findByEmail(value: string): Promise<User> {
     return await this.userRepository.findOne({ email: value });
+  }
+
+  async findByNickname(value: string): Promise<User> {
+    return await this.userRepository.findOne({ nickname: value });
   }
   
   async createUser(createUserDto: CreateUserDto): Promise<User> {

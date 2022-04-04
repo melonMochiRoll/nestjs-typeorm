@@ -14,13 +14,6 @@ export class UserController {
     private authService: AuthService,
     ) {}
 
-  // @Get()
-  // findByType(
-  //   @Query('value') value: string,
-  //   ): Promise<User> {
-  //   return this.userService.findByType(value);
-  // }
-
   @Get('email')
   findByEmail(
     @Query('value') value: string,
@@ -28,28 +21,45 @@ export class UserController {
     return this.userService.findByEmail(value);
   }
 
+  @Get('nickname')
+  findByNickname(
+    @Query('value') value: string,
+    ): Promise<User> {
+    return this.userService.findByNickname(value);
+  }
+
   @Post()
   @UsePipes(ValidationPipe)
-  createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
+  createUser(
+    @Body() createUserDto: CreateUserDto
+    ): Promise<User> {
     return this.userService.createUser(createUserDto);
   }
 
   @Get('jwt')
   @UseGuards(JwtAuthGuard)
-  getJwt(@UserDecorator() user: User): User | false {
+  getJwt(
+    @UserDecorator() user: User
+    ): User | false {
     return user || false;
   }
 
   @Post('login')
   @UseGuards(LocalAuthGuard)
-  async jwtLogIn(@UserDecorator() user: User, @Res({ passthrough: true }) res: Response) {
+  async jwtLogIn(
+    @UserDecorator() user: User,
+    @Res({ passthrough: true }) res: Response
+    ) {
     const token = await this.authService.signJwt(user);
     res.cookie('Authorization', token.access_token);
     return token;
   }
 
   @Get('logout')
-  logOut(@Req() req: Request, @Res() res: Response): void {
+  logOut(
+    @Req() req: Request,
+    @Res() res: Response
+    ): void {
     req.logout();
     res.redirect('/');
   }
