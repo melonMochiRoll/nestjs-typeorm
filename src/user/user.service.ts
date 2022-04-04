@@ -6,18 +6,20 @@ import { UserHttpResponseMessageEnum } from 'src/common/enums';
 import { User } from 'src/entities';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto';
-import { UserQueryRepository } from './user.query.repository';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
-    private userQueryRepository: UserQueryRepository,
     ) {}
 
-  async findByType(value: string): Promise<User> {
-    return await this.userQueryRepository.findUser(value);
+  // async findByType(value: string): Promise<User> {
+  //   return await this.userQueryRepository.findUser(value);
+  // }
+
+  async findByEmail(value: string): Promise<User> {
+    return await this.userRepository.findOne({ email: value });
   }
   
   async createUser(createUserDto: CreateUserDto): Promise<User> {

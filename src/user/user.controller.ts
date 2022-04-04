@@ -14,11 +14,18 @@ export class UserController {
     private authService: AuthService,
     ) {}
 
-  @Get()
-  findByType(
+  // @Get()
+  // findByType(
+  //   @Query('value') value: string,
+  //   ): Promise<User> {
+  //   return this.userService.findByType(value);
+  // }
+
+  @Get('email')
+  findByEmail(
     @Query('value') value: string,
     ): Promise<User> {
-    return this.userService.findByType(value);
+    return this.userService.findByEmail(value);
   }
 
   @Post()
