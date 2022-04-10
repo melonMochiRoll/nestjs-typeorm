@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import bcrypt from 'bcrypt';
 import { SALT_OR_ROUNDS } from 'src/common/constants';
@@ -14,12 +14,20 @@ export class UserService {
     private userRepository: Repository<User>,
     ) {}
 
-  async findByEmail(value: string): Promise<User> {
-    return await this.userRepository.findOne({ email: value });
+  async findByEmail(email: string): Promise<User> {
+    const user = await this.userRepository.findOne({ email });
+    if (user) {
+      return user;
+    }
+    throw new NotFoundException(UserHttpResponseMessageEnum.NOTEXIST_EMAIL);
   }
 
-  async findByNickname(value: string): Promise<User> {
-    return await this.userRepository.findOne({ nickname: value });
+  async findByNickname(nickname: string): Promise<User> {
+    const user = await this.userRepository.findOne({ nickname });
+    if (user) {
+      return user;
+    }
+    throw new NotFoundException(UserHttpResponseMessageEnum.NOTEXIST_NICKNAME);
   }
   
   async createUser(createUserDto: CreateUserDto): Promise<User> {
@@ -32,7 +40,7 @@ export class UserService {
       ]
     });
     if (user) {
-      throw new HttpException(UserHttpResponseMessageEnum.INVALID_JOIN, 401);
+      throw new ConflictException(UserHttpResponseMessageEnum.INVALID_JOIN);
     }
 
     const hashedPassword = await bcrypt.hash(password, SALT_OR_ROUNDS);
