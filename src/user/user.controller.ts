@@ -16,16 +16,16 @@ export class UserController {
 
   @Get('email')
   findByEmail(
-    @Query('value') value: string,
+    @Query('value') email: string,
     ): Promise<User> {
-    return this.userService.findByEmail(value);
+    return this.userService.findByEmail(email);
   }
 
   @Get('nickname')
   findByNickname(
-    @Query('value') value: string,
+    @Query('value') nickname: string,
     ): Promise<User> {
-    return this.userService.findByNickname(value);
+    return this.userService.findByNickname(nickname);
   }
 
   @Post()
