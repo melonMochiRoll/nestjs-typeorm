@@ -11,7 +11,7 @@ export class AuthService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
-    private jwtService: JwtService ) {}
+    ) {}
 
   async validateUser(email: string, password: string) {
     const user = await this.userRepository.findOne({ email },
@@ -27,12 +27,5 @@ export class AuthService {
       return result;
     }
     return null;
-  }
-
-  async signJwt(user: User) {
-    const payload: JwtPayload = { sub: `${user.id}`, username: user.nickname, role: user.role };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
   }
 }
