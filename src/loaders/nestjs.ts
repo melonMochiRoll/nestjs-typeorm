@@ -7,7 +7,10 @@ import passport from "passport";
 
 export const nestjsLoader = async (app: NestExpressApplication) => {
   app.useGlobalPipes(new ValidationPipe() );
-  app.enableCors({ origin: true, credentials: true });
+  app.enableCors({
+    origin: true,
+    credentials: true,
+  });
   app.use(helmet() );
 
   app.use(cookieParser() );
@@ -16,7 +19,7 @@ export const nestjsLoader = async (app: NestExpressApplication) => {
       resave: false,
       saveUninitialized: false,
       cookie: {
-        httpOnly: true
+        httpOnly: true,
       }
     }));
   app.use(passport.initialize());
