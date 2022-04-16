@@ -12,8 +12,12 @@ export const nestjsLoader = async (app: NestExpressApplication) => {
     url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
     password: process.env.REDIS_PASSWORD,
   });
+  redisClient.on('error', (error: any) => {
+    console.error('Redis Client Error', error);
+  });
 
   app.useGlobalPipes(new ValidationPipe() );
+
   app.enableCors({
     origin: true,
     credentials: true,
@@ -27,9 +31,11 @@ export const nestjsLoader = async (app: NestExpressApplication) => {
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
+      secure: false,
     },
     store: new RedisStore({ client: redisClient, logErrors: true }),
   }));
+  
   app.use(passport.initialize());
   app.use(passport.session());
 }
