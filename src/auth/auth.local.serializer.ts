@@ -22,6 +22,7 @@ export class LocalSerializer extends PassportSerializer {
       const user = await this.userRepository.findOne({ id: Number(userId) });
       done(null, user);
     } catch(e) {
+      console.error('deserializeUser Error', e);
       done(e);
     }
   }
