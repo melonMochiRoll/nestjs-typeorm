@@ -14,6 +14,22 @@ export class UserService {
     private userRepository: Repository<User>,
     ) {}
 
+  async checkByEmail(email: string) {
+    const user = await this.userRepository.count({ email });
+    if (user) {
+      throw new ConflictException(UserHttpResponseMessageEnum.EXIST_EMAIL);
+    }
+    return true;
+  }
+
+  async checkByNickname(nickname: string) {
+    const user = await this.userRepository.count({ nickname });
+    if (user) {
+      throw new ConflictException(UserHttpResponseMessageEnum.EXIST_NICKNAME);
+    }
+    return true;
+  }
+
   async findByEmail(email: string): Promise<User> {
     const user = await this.userRepository.findOne({ email });
     if (user) {
@@ -33,21 +49,15 @@ export class UserService {
   async createUser(createUserDto: CreateUserDto): Promise<User> {
     const { email, nickname, password } = createUserDto;
     
-    const user = await this.userRepository.findOne({
-      where: [
-        { email },
-        { nickname },
-      ]
-    });
-    if (user) {
-      throw new ConflictException(UserHttpResponseMessageEnum.INVALID_JOIN);
-    }
+    await this.checkByEmail(email);
+    await this.checkByNickname(nickname);
 
     const hashedPassword = await bcrypt.hash(password, SALT_OR_ROUNDS);
     const savedUser = await this.userRepository.save({
       email,
       nickname,
-      password: hashedPassword });
+      password: hashedPassword
+    });
 
     return savedUser;
   }
