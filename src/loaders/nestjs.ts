@@ -7,7 +7,7 @@ import passport from "passport";
 import { createClient } from 'redis';
 
 export const nestjsLoader = async (app: NestExpressApplication) => {
-  let RedisStore = require('connect-redis')(session);
+  const RedisStore = require('connect-redis')(session);
   const redisClient = createClient({
     url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
     password: process.env.REDIS_PASSWORD,
@@ -32,6 +32,7 @@ export const nestjsLoader = async (app: NestExpressApplication) => {
     cookie: {
       httpOnly: true,
       secure: false,
+      maxAge: 900000,
     },
     store: new RedisStore({ client: redisClient, logErrors: true }),
   }));
