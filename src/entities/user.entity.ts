@@ -1,23 +1,25 @@
 import { IsEmail, IsNotEmpty } from "class-validator";
 import { UserRoleEnum } from "src/common/enums";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, Index, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Memo } from "./memo.entity";
 
-@Entity()
+@Index('email', ['email'], { unique: true })
+@Entity({ schema: 'melonmochi', name: 'user' })
 export class User {
-  @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
+  @PrimaryGeneratedColumn({ type: 'int' })
   id: number;
 
   @IsEmail()
   @IsNotEmpty()
-  @Column('varchar', { name: 'email', unique: true, })
+  @Column('varchar', { unique: true, })
   email: string;
 
   @IsNotEmpty()
-  @Column('varchar', { name: 'nickname', length: 30 })
+  @Column('varchar', { length: 16, })
   nickname: string;
 
   @IsNotEmpty()
-  @Column('varchar', { name: 'password', length: 100, select: false })
+  @Column('text', { select: false })
   password: string;
 
   @Column({
@@ -26,4 +28,16 @@ export class User {
     type: 'enum'
   })
   role: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
+
+  @OneToMany(() => Memo, (memo) => memo.user)
+  memos: Memo[];
 }
