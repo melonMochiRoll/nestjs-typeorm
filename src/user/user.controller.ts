@@ -12,6 +12,13 @@ export class UserController {
     private userService: UserService,
     ) {}
 
+  @Get()
+  getUser(
+    @UserDecorator() user: User
+    ): User | null {
+    return user || null;
+  }
+
   @Get('checkEmail')
   checkByEmail(
     @Query('email') email: string,
