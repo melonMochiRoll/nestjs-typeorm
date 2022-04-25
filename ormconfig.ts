@@ -1,6 +1,6 @@
 import { TypeOrmModuleOptions } from "@nestjs/typeorm";
 import dotenv from 'dotenv';
-import { User } from "src/entities/user.entity";
+import { User, Memo, MemoFolder, Tag, MemoTag } from "src/entities";
 
 dotenv.config();
 export const ormConfig: TypeOrmModuleOptions = {
@@ -12,6 +12,10 @@ export const ormConfig: TypeOrmModuleOptions = {
   database: process.env.ADMIN_DATABASE,
   entities: [
     User,
+    Memo,
+    Tag,
+    MemoTag,
+    MemoFolder,
   ],
   autoLoadEntities: true,
   charset: 'utf8mb4',

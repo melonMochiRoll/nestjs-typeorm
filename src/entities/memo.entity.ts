@@ -2,12 +2,14 @@ import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, Ma
 import { MemoFolder } from "./memoFolder.entity";
 import { MemoTag } from "./memoTag.entity";
 import { Tag } from "./tag.entity";
-import { User } from "./user.entity";
 
 @Entity({ schema: 'melonmochi', name: 'memo' })
 export class Memo {
   @PrimaryGeneratedColumn({ type: 'int' })
   id: number;
+
+  @Column('varchar', { length: 45, nullable: true })
+  title: string;
 
   @Column('text')
   contents: string;
@@ -21,17 +23,8 @@ export class Memo {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => User, (user) => user.memos, {
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
-  })
-  @JoinColumn([{
-    name: 'userId', referencedColumnName: 'id',
-  }])
-  user: User;
-
   @ManyToOne(() => MemoFolder, (memoFolder) => memoFolder.memos, {
-    onDelete: 'SET NULL',
+    onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
   @JoinColumn([{

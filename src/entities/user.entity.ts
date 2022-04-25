@@ -1,7 +1,6 @@
 import { IsEmail, IsNotEmpty } from "class-validator";
-import { UserRoleEnum } from "src/common/enums";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, Index, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { Memo } from "./memo.entity";
+import { MemoFolder } from "./memoFolder.entity";
 
 @Index('email', ['email'], { unique: true })
 @Entity({ schema: 'melonmochi', name: 'user' })
@@ -22,13 +21,6 @@ export class User {
   @Column('text', { select: false })
   password: string;
 
-  @Column({
-    enum: UserRoleEnum,
-    default: UserRoleEnum.USER,
-    type: 'enum'
-  })
-  role: string;
-
   @CreateDateColumn()
   createdAt: Date;
 
@@ -38,6 +30,6 @@ export class User {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @OneToMany(() => Memo, (memo) => memo.user)
-  memos: Memo[];
+  @OneToMany(() => MemoFolder, (memo) => memo.user)
+  memos: MemoFolder[];
 }

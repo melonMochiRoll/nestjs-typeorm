@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Memo } from "./memo.entity";
 import { MemoTag } from "./memoTag.entity";
 
