@@ -1,5 +1,6 @@
-import { Body, Controller, Get, Post, Query, Req, Res, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
-import type { Request, Response } from 'express';
+import { Body, Controller, Get, Next, Post, Query, Req, Res, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import type { NextFunction, Request, Response } from 'express';
+import session, { Store } from 'express-session';
 import { UserDecorator } from 'src/common';
 import { LocalAuthGuard } from 'src/common/guards'
 import { User } from 'src/entities';
@@ -67,9 +68,10 @@ export class UserController {
   logOut(
     @Req() req: Request,
     @Res() res: Response,
-    ): void {
-    req.logout();
+    ) {
     res.clearCookie('connect.sid', { httpOnly: true });
-    req.session.destroy((err) => console.error(err));
+    req.session.destroy(() => {
+      res.send('ok');
+    });
   }
 }
