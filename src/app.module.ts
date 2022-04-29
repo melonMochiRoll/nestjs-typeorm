@@ -5,6 +5,8 @@ import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ormConfig } from '../ormconfig';
 import { UserModule } from './user/user.module';
+import { MemoModule } from './memo/memo.module';
+import { TagModule } from './tag/tag.module';
 
 @Module({
   imports: [
@@ -12,6 +14,8 @@ import { UserModule } from './user/user.module';
     TypeOrmModule.forRoot(ormConfig),
     AuthModule,
     UserModule,
+    MemoModule,
+    TagModule,
   ],
 })
 
