@@ -14,7 +14,9 @@ export class UserService {
     private userRepository: Repository<User>,
     ) {}
 
-  async checkByEmail(email: string) {
+  async checkByEmail(
+    email: string,
+    ) {
     const user = await this.userRepository.count({ email });
     if (user) {
       throw new ConflictException(UserHttpResponseMessageEnum.EXIST_EMAIL);
@@ -22,7 +24,9 @@ export class UserService {
     return true;
   }
 
-  async checkByNickname(nickname: string) {
+  async checkByNickname(
+    nickname: string,
+    ) {
     const user = await this.userRepository.count({ nickname });
     if (user) {
       throw new ConflictException(UserHttpResponseMessageEnum.EXIST_NICKNAME);
@@ -30,7 +34,9 @@ export class UserService {
     return true;
   }
 
-  async findByEmail(email: string): Promise<User> {
+  async findByEmail(
+    email: string
+    ): Promise<User> {
     const user = await this.userRepository.findOne({ email });
     if (user) {
       return user;
@@ -38,7 +44,9 @@ export class UserService {
     throw new NotFoundException(UserHttpResponseMessageEnum.NOTEXIST_EMAIL);
   }
 
-  async findByNickname(nickname: string): Promise<User> {
+  async findByNickname(
+    nickname: string
+    ): Promise<User> {
     const user = await this.userRepository.findOne({ nickname });
     if (user) {
       return user;
@@ -46,7 +54,9 @@ export class UserService {
     throw new NotFoundException(UserHttpResponseMessageEnum.NOTEXIST_NICKNAME);
   }
   
-  async createUser(createUserDto: CreateUserDto): Promise<User> {
+  async createUser(
+    createUserDto: CreateUserDto,
+    ): Promise<boolean> {
     const { email, nickname, password } = createUserDto;
     
     await this.checkByEmail(email);
@@ -59,6 +69,6 @@ export class UserService {
       password: hashedPassword
     });
 
-    return savedUser;
+    return true;
   }
 }

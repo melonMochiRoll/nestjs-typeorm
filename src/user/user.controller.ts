@@ -1,6 +1,5 @@
-import { Body, Controller, Get, Next, Post, Query, Req, Res, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
-import type { NextFunction, Request, Response } from 'express';
-import session, { Store } from 'express-session';
+import { Body, Controller, Get, Post, Query, Req, Res, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import type { Request, Response } from 'express';
 import { UserDecorator } from 'src/common';
 import { LocalAuthGuard } from 'src/common/guards'
 import { User } from 'src/entities';
@@ -15,7 +14,7 @@ export class UserController {
 
   @Get()
   getUser(
-    @UserDecorator() user: User
+    @UserDecorator() user: User,
     ): User | null {
     return user || null;
   }
@@ -52,7 +51,7 @@ export class UserController {
   @UsePipes(ValidationPipe)
   createUser(
     @Body() createUserDto: CreateUserDto,
-    ): Promise<User> {
+    ): Promise<boolean> {
     return this.userService.createUser(createUserDto);
   }
 
