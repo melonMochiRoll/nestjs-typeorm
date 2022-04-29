@@ -1,6 +1,6 @@
 import { IsEmail, IsNotEmpty } from "class-validator";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, Index, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { MemoFolder } from "./memoFolder.entity";
+import { Comment } from "./comment.entity";
 
 @Index('email', ['email'], { unique: true })
 @Entity({ schema: 'melonmochi', name: 'user' })
@@ -10,11 +10,11 @@ export class User {
 
   @IsEmail()
   @IsNotEmpty()
-  @Column('varchar', { unique: true, })
+  @Column('varchar', { unique: true })
   email: string;
 
   @IsNotEmpty()
-  @Column('varchar', { length: 16, })
+  @Column('varchar', { length: 16 })
   nickname: string;
 
   @IsNotEmpty()
@@ -30,6 +30,6 @@ export class User {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @OneToMany(() => MemoFolder, (memo) => memo.user)
-  memos: MemoFolder[];
+  @OneToMany(() => Comment, (comment) => comment.user)
+  comments: Comment[];
 }
