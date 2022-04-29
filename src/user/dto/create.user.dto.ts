@@ -1,9 +1,12 @@
-import { PickType } from "@nestjs/swagger";
-import { User } from "src/entities";
+import { Column } from "typeorm";
 
-export class CreateUserDto extends PickType(User,
-  [
-    'email',
-    'nickname',
-    'password'
-  ] as const) {};
+export class CreateUserDto {
+  @Column('varchar', { unique: true })
+  email: string;
+
+  @Column('varchar', { length: 16 })
+  nickname: string;
+
+  @Column('text', { select: false })
+  password: string;
+};
