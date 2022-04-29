@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { MemoFolder } from "./memoFolder.entity";
+import { Comment } from "./comment.entity";
 import { MemoTag } from "./memoTag.entity";
 import { Tag } from "./tag.entity";
 
@@ -8,29 +8,26 @@ export class Memo {
   @PrimaryGeneratedColumn({ type: 'int' })
   id: number;
 
+  @Column('varchar', { length: 16 })
+  author: string;
+
   @Column('varchar', { length: 45, nullable: true })
   title: string;
 
-  @Column('text')
+  @Column('varchar', { length: 1000 })
   contents: string;
 
-  @Column('boolean')
-  public: boolean;
+  @Column('boolean', { default: true })
+  publicMode: boolean;
+  
+  @Column('varchar', { length: 33 })
+  folderName: string;
 
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
-
-  @ManyToOne(() => MemoFolder, (memoFolder) => memoFolder.memos, {
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
-  })
-  @JoinColumn([{
-    name: 'memoFolderId', referencedColumnName: 'id',
-  }])
-  memoFolder: MemoFolder;
 
   @OneToMany(() => MemoTag, (memoTag) => memoTag.memo)
   memoTag: MemoTag[];
@@ -48,4 +45,7 @@ export class Memo {
     },
   })
   tags: Tag[];
+
+  @OneToMany(() => Comment, (comment) => comment.memo)
+  comments: Comment[];
 }
