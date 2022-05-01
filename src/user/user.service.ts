@@ -18,9 +18,11 @@ export class UserService {
     email: string,
     ) {
     const user = await this.userRepository.count({ email });
+
     if (user) {
       throw new ConflictException(UserHttpResponseMessageEnum.EXIST_EMAIL);
     }
+    
     return true;
   }
 
@@ -28,9 +30,11 @@ export class UserService {
     nickname: string,
     ) {
     const user = await this.userRepository.count({ nickname });
+
     if (user) {
       throw new ConflictException(UserHttpResponseMessageEnum.EXIST_NICKNAME);
     }
+
     return true;
   }
 
@@ -38,9 +42,11 @@ export class UserService {
     email: string
     ): Promise<User> {
     const user = await this.userRepository.findOne({ email });
+
     if (user) {
       return user;
     }
+
     throw new NotFoundException(UserHttpResponseMessageEnum.NOTEXIST_EMAIL);
   }
 
@@ -48,9 +54,11 @@ export class UserService {
     nickname: string
     ): Promise<User> {
     const user = await this.userRepository.findOne({ nickname });
+
     if (user) {
       return user;
     }
+
     throw new NotFoundException(UserHttpResponseMessageEnum.NOTEXIST_NICKNAME);
   }
   
@@ -63,7 +71,7 @@ export class UserService {
     await this.checkByNickname(nickname);
 
     const hashedPassword = await bcrypt.hash(password, SALT_OR_ROUNDS);
-    const savedUser = await this.userRepository.save({
+    await this.userRepository.save({
       email,
       nickname,
       password: hashedPassword
