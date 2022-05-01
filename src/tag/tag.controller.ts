@@ -8,10 +8,10 @@ export class TagController {
   ) {}
 
   @Get()
-  async getTag(
+  async getTags(
     @Query('keyword') keyword,
   ) {
-    return await this.tagService.getTag(keyword);
+    return await this.tagService.getTags(keyword);
   }
 
   @Post()

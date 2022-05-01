@@ -10,7 +10,7 @@ export class TagService {
     private tagRepository: Repository<Tag>,
   ) {}
 
-  async getTag(
+  async getTags(
     keyword: string,
     ): Promise<Tag[]> {
     const tag = await this.tagRepository.find({
@@ -27,7 +27,7 @@ export class TagService {
   async createTag(
     keyword: string,
     ): Promise<Tag> {
-    const check = await this.getTag(keyword);
+    const check = await this.getTags(keyword);
 
     if (check.length) {
       return null;
