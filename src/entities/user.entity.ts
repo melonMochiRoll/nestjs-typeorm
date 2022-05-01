@@ -1,8 +1,8 @@
 import { IsEmail, IsNotEmpty } from "class-validator";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, Index, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Comment } from "./comment.entity";
+import { Memo } from "./memo.entity";
 
-@Index('email', ['email'], { unique: true })
 @Entity({ schema: 'melonmochi', name: 'user' })
 export class User {
   @PrimaryGeneratedColumn({ type: 'int' })
@@ -29,6 +29,9 @@ export class User {
 
   @DeleteDateColumn()
   deletedAt: Date;
+
+  @OneToMany(() => Memo, (memo) => memo.user)
+  memos: Memo[];
 
   @OneToMany(() => Comment, (comment) => comment.user)
   comments: Comment[];

@@ -2,6 +2,7 @@ import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, Ma
 import { Comment } from "./comment.entity";
 import { MemoTag } from "./memoTag.entity";
 import { Tag } from "./tag.entity";
+import { User } from "./user.entity";
 
 @Entity({ schema: 'melonmochi', name: 'memo' })
 export class Memo {
@@ -20,7 +21,7 @@ export class Memo {
   @Column('boolean', { default: true })
   publicMode: boolean;
   
-  @Column('varchar', { length: 33 })
+  @Column('varchar', { length: 33, default: '메모' })
   folderName: string;
 
   @CreateDateColumn()
@@ -28,6 +29,15 @@ export class Memo {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @Column('int', { name: 'userId' })
+  userId: number;
+
+  @ManyToOne(() => User, (user) => user.memos)
+  @JoinColumn([{
+    name: 'userId', referencedColumnName: 'id',
+  }])
+  user: User;
 
   @OneToMany(() => MemoTag, (memoTag) => memoTag.memo)
   memoTag: MemoTag[];
