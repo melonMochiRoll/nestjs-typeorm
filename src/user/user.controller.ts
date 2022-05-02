@@ -35,14 +35,14 @@ export class UserController {
 
   @Get('email')
   findByEmail(
-    @Query('value') email: string,
+    @Query('email') email: string,
     ): Promise<User> {
     return this.userService.findByEmail(email);
   }
 
   @Get('nickname')
   findByNickname(
-    @Query('value') nickname: string,
+    @Query('nickname') nickname: string,
     ): Promise<User> {
     return this.userService.findByNickname(nickname);
   }
