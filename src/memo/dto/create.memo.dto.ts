@@ -13,9 +13,12 @@ export class CreateMemoDto {
   @Column('boolean', { default: true })
   publicMode: boolean;
 
-  @Column('int')
+  @Column('varchar', { length: 33 })
   folderName: string;
 
-  @Column('tags')
-  tags: string[];
+  @Column('int')
+  userId: number;
+
+  @Column('text')
+  tags: string;
 };
