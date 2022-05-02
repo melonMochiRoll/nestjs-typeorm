@@ -17,7 +17,7 @@ export class TagService {
       tag: Like(`%${keyword}%`),
     });
 
-    if (tag.length) {
+    if (tag?.length) {
       return tag;
     }
     
@@ -29,7 +29,7 @@ export class TagService {
     ): Promise<Tag> {
     const check = await this.getTags(keyword);
 
-    if (check.length) {
+    if (check?.length) {
       return null;
     }
 
