@@ -32,19 +32,11 @@ export class MemoService {
   async createMemo(
     createMemoDto: CreateMemoDto,
     ): Promise<boolean> {
-    const { title, author, contents, publicMode, folderName, userId, tags } = createMemoDto;
+    const { tags, ...withoutTags } = createMemoDto;
 
-    await this.userService.findByNickname(author);
+    await this.userService.findByNickname(withoutTags.author);
 
-    const createdMemo = await this.memoRepository.save({
-      title,
-      author,
-      contents,
-      publicMode,
-      folderName,
-      userId,
-    });
-
+    const createdMemo = await this.memoRepository.save(withoutTags);
     await this.updateTags(createdMemo.id, tags);
     
     return true;
