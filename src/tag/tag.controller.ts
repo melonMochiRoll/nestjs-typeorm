@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Query } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { TagService } from './tag.service';
 
 @Controller('api/tag')
@@ -12,12 +12,5 @@ export class TagController {
     @Query('keyword') keyword,
   ) {
     return await this.tagService.getTags(keyword);
-  }
-
-  @Post()
-  async createTag(
-    @Query('keyword') keyword,
-  ) {
-    return await this.tagService.createTag(keyword);
   }
 }

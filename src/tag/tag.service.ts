@@ -10,6 +10,15 @@ export class TagService {
     private tagRepository: Repository<Tag>,
   ) {}
 
+  async getTag(
+    keyword: string,
+    ): Promise<Tag> {
+    const tag = await this.tagRepository.findOne({
+      tag: keyword,
+    });
+    return tag;
+  }
+
   async getTags(
     keyword: string,
     ): Promise<Tag[]> {
@@ -22,21 +31,5 @@ export class TagService {
     }
     
     return null;
-  }
-
-  async createTag(
-    keyword: string,
-    ): Promise<Tag> {
-    const check = await this.getTags(keyword);
-
-    if (check?.length) {
-      return null;
-    }
-
-    const tag = await this.tagRepository.save({
-      tag: keyword,
-    });
-
-    return tag;
   }
 }
