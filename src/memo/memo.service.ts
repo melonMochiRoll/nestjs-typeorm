@@ -98,15 +98,21 @@ export class MemoService {
         return tagId;
       });
 
-      const newTags = await Promise.all(
+      const newTagIds = await Promise.all(
         tags.split(';').map(async (tag: string) => {
         const searchedTag = await this.tagService.getTag(tag);
 
-        if (oldTagIds.includes(searchedTag.id)) {
+        if (oldTagIds.includes(searchedTag?.id)) {
           remainingTagIds.push(searchedTag.id);
           return Promise.resolve(null);
         }
-        return Promise.resolve(tag);
+
+        if (searchedTag) {
+          return Promise.resolve(searchedTag.id);
+        }
+
+        const createdTag = await qr.manager.getRepository(Tag).save({ tag });
+        return Promise.resolve(createdTag.id);
         })
       );
       
@@ -119,24 +125,14 @@ export class MemoService {
       );
 
       await Promise.all(
-        newTags.map(async (tag: string) => {
-          if (!tag) {
-            return;
-          }
-          const searchedTag = await this.tagService.getTag(tag);
-    
-          if (searchedTag) {
-            await qr.manager.getRepository(MemoTag).save({
-              memoId,
-              tagId: searchedTag.id,
-            });
+        newTagIds.map(async (tagId: number) => {
+          if (!tagId) {
             return;
           }
 
-          const createdTag = await qr.manager.getRepository(Tag).save({ tag });
           await qr.manager.getRepository(MemoTag).save({
             memoId,
-            tagId: createdTag.id,
+            tagId,
           });
         })
       );
