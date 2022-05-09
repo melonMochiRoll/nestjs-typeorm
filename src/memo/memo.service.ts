@@ -50,20 +50,13 @@ export class MemoService {
           if (!tag) {
             return;
           }
-          const searchedTag = await this.tagService.getTag(tag);
+          const searchOrCreatedTag =
+            await this.tagService.getTag(tag) ||
+            await qr.manager.getRepository(Tag).save({ tag });
     
-          if (searchedTag) {
-            await qr.manager.getRepository(MemoTag).save({
-              memoId: createdMemo.id,
-              tagId: searchedTag.id,
-            });
-            return;
-          }
-  
-          const createdTag = await qr.manager.getRepository(Tag).save({ tag });
           await qr.manager.getRepository(MemoTag).save({
             memoId: createdMemo.id,
-            tagId: createdTag.id,
+            tagId: searchOrCreatedTag.id,
           });
         })
       );
@@ -90,7 +83,6 @@ export class MemoService {
     await qr.startTransaction();
     try {
       await qr.manager.getRepository(Memo).update(memoId, updateProperty);
-      const remainingTagIds = [];
 
       const oldRelations = await this.memoTagRepository.find({ memoId });
       const oldTagIds = oldRelations.map((memoTag: MemoTag) => {
@@ -98,42 +90,27 @@ export class MemoService {
         return tagId;
       });
 
-      const newTagIds = await Promise.all(
+      await Promise.all(
         tags.split(';').map(async (tag: string) => {
-        const searchedTag = await this.tagService.getTag(tag);
+          const searchOrCreatedTag =
+            await this.tagService.getTag(tag) ||
+            await qr.manager.getRepository(Tag).save({ tag });
 
-        if (oldTagIds.includes(searchedTag?.id)) {
-          remainingTagIds.push(searchedTag.id);
-          return Promise.resolve(null);
-        }
-
-        if (searchedTag) {
-          return Promise.resolve(searchedTag.id);
-        }
-
-        const createdTag = await qr.manager.getRepository(Tag).save({ tag });
-        return Promise.resolve(createdTag.id);
-        })
-      );
-      
-      await Promise.all(
-        oldTagIds.map(async (tagId: number) => {
-          if (!remainingTagIds.includes(tagId)) {
-            await qr.manager.getRepository(MemoTag).delete({ memoId, tagId });
-          }
-        })
-      );
-
-      await Promise.all(
-        newTagIds.map(async (tagId: number) => {
-          if (!tagId) {
-            return;
+          const remainingTag = oldTagIds.findIndex(ele => ele === searchOrCreatedTag?.id);
+          if (remainingTag > -1) {
+            oldTagIds.splice(remainingTag, 1);
           }
 
           await qr.manager.getRepository(MemoTag).save({
             memoId,
-            tagId,
+            tagId: searchOrCreatedTag.id,
           });
+        })
+      );
+
+      await Promise.all(
+        oldTagIds.map(async (tagId: number) => {
+          await qr.manager.getRepository(MemoTag).delete({ memoId, tagId });
         })
       );
 
