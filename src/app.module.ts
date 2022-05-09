@@ -7,6 +7,7 @@ import { ormConfig } from '../ormconfig';
 import { UserModule } from './user/user.module';
 import { MemoModule } from './memo/memo.module';
 import { TagModule } from './tag/tag.module';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { TagModule } from './tag/tag.module';
     UserModule,
     MemoModule,
     TagModule,
+    CommentModule,
   ],
 })
 
