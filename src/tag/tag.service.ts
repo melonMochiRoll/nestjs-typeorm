@@ -16,7 +16,12 @@ export class TagService {
     const tag = await this.tagRepository.findOne({
       tag: keyword,
     });
-    return tag;
+
+    if (tag) {
+      return tag;
+    }
+
+    return null;
   }
 
   async getTags(
@@ -31,5 +36,12 @@ export class TagService {
     }
     
     return null;
+  }
+
+  async deleteTag(
+    keyword: string,
+  ) {
+    await this.tagRepository.delete({ tag: keyword });
+    return true;
   }
 }
