@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Memo, MemoTag, Tag } from 'src/entities';
 import { TagService } from 'src/tag';
@@ -65,6 +65,7 @@ export class MemoService {
     } catch(e) {
       console.error(e);
       await qr.rollbackTransaction();
+      throw new ConflictException();
     } finally {
       await qr.release();
     }
@@ -118,6 +119,7 @@ export class MemoService {
     } catch(e) {
       console.error(e);
       await qr.rollbackTransaction();
+      throw new ConflictException();
     } finally {
       await qr.release();
     }
@@ -128,7 +130,13 @@ export class MemoService {
   async deleteMemo(
     memoId: number,
     ): Promise<boolean> {
-    await this.memoRepository.delete(memoId);
+    try {
+      await this.memoRepository.delete(memoId);
+    } catch(e) {
+      console.error(e);
+      throw new ConflictException();
+    }
+    
     return true;
   }
 }
