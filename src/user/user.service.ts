@@ -71,11 +71,16 @@ export class UserService {
     await this.checkByNickname(nickname);
 
     const hashedPassword = await bcrypt.hash(password, SALT_OR_ROUNDS);
-    await this.userRepository.save({
-      email,
-      nickname,
-      password: hashedPassword
-    });
+    try {
+      await this.userRepository.save({
+        email,
+        nickname,
+        password: hashedPassword
+      });
+    } catch(e) {
+      console.error(e);
+      throw new ConflictException();
+    }
 
     return true;
   }
