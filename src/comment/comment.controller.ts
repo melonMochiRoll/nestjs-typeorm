@@ -11,21 +11,21 @@ export class CommentController {
   @Post()
   async createComment(
     @Body() createCommentDto: CreateCommentDto,
-  ) {
+  ): Promise<boolean> {
     return this.commentService.createComment(createCommentDto);
   }
 
   @Put()
   async updateComment(
     @Body() updateCommentDto: UpdateCommentDto,
-  ) {
+  ): Promise<boolean> {
     return this.commentService.updateComment(updateCommentDto);
   }
 
   @Delete()
   async deleteComment(
     @Query('id', ParseIntPipe) commentId: number,
-  ) {
+  ): Promise<boolean> {
     return this.commentService.deleteComment(commentId);
   }
 }

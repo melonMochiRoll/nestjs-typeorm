@@ -26,7 +26,7 @@ export class CommentService {
 
   async updateComment(
     updateCommentDto: UpdateCommentDto,
-  ) {
+  ): Promise<boolean> {
     const { memoId, text } = updateCommentDto;
     try {
       await this.commentRepository.update(memoId, { text });
