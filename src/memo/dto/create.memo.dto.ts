@@ -1,8 +1,6 @@
 import { Column } from "typeorm";
 
 export class CreateMemoDto {
-  @Column('varchar', { length: 45, nullable: true })
-  title: string;
 
   @Column('varchar', { length: 16 })
   author: string;
