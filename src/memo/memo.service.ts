@@ -5,6 +5,7 @@ import { TagService } from 'src/tag';
 import { UserService } from 'src/user';
 import { Connection, Repository } from 'typeorm';
 import { CreateMemoDto, UpdateMemoDto } from './dto';
+import { MemoQueryRepository } from './memo.query.repository';
 
 @Injectable()
 export class MemoService {
@@ -16,20 +17,28 @@ export class MemoService {
     private tagRepository: Repository<Tag>,
     @InjectRepository(MemoTag)
     private memoTagRepository: Repository<MemoTag>,
+    private memoQueryRepository: MemoQueryRepository,
     private userService: UserService,
     private tagService: TagService,
   ) {}
 
   async getMemos(
-    userId: number
+    userId: number,
     ): Promise<Memo[]> {
-    const foundMemos = await this.memoRepository.find({ userId });
+    const memos = await this.memoRepository.find({ userId });
 
-    if(!foundMemos?.length) {
+    if (!memos?.length) {
       throw new NotFoundException('유저 정보를 찾지 못했습니다.');
     }
 
-    return foundMemos;
+    return memos;
+  }
+
+  async getMemoCount(
+    userId: number,
+  ): Promise<any[]> {
+    const folderCount = await this.memoQueryRepository.getMemoFolderCount(userId);
+    return folderCount;
   }
 
   async createMemo(

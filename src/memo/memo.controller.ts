@@ -16,6 +16,13 @@ export class MemoController {
     return await this.memoService.getMemos(userId);
   }
 
+  @Get('count')
+  async getMemoCount(
+    @Query('id', ParseIntPipe) userId: number,
+  ): Promise<any> {
+    return await this.memoService.getMemoCount(userId);
+  }
+
   @Post()
   async createMemo(
     @Body() createMemoDto: CreateMemoDto,
