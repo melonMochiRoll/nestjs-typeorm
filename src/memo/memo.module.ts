@@ -4,6 +4,7 @@ import { Memo, MemoTag, Tag, User } from 'src/entities';
 import { TagService } from 'src/tag';
 import { UserService } from 'src/user';
 import { MemoController } from './memo.controller';
+import { MemoQueryRepository } from './memo.query.repository';
 import { MemoService } from './memo.service';
 
 @Module({
@@ -16,6 +17,11 @@ import { MemoService } from './memo.service';
     ]),
   ],
   controllers: [ MemoController ],
-  providers: [ MemoService, UserService, TagService, ]
+  providers: [
+    MemoService,
+    UserService,
+    TagService,
+    MemoQueryRepository,
+  ]
 })
 export class MemoModule {}
