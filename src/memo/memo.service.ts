@@ -1,5 +1,6 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { MemoCount } from 'src/common/interfaces';
 import { Memo, MemoTag, Tag } from 'src/entities';
 import { TagService } from 'src/tag';
 import { UserService } from 'src/user';
@@ -34,10 +35,23 @@ export class MemoService {
     return memos;
   }
 
+  async getMemosByFolderName(
+    userId: number,
+    folderName: string,
+  ): Promise<Memo[]> {
+    const memos = await this.memoQueryRepository.getMemosByFolderName(userId, folderName);
+
+    if (!memos?.length) {
+      throw new NotFoundException('메모 정보를 찾지 못했습니다.');
+    }
+
+    return memos;
+  }
+
   async getMemoCount(
     userId: number,
-  ): Promise<any[]> {
-    const folderCount = await this.memoQueryRepository.getMemoFolderCount(userId);
+  ): Promise<MemoCount[]> {
+    const folderCount = await this.memoQueryRepository.getMemoCount(userId);
     return folderCount;
   }
 

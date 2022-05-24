@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, Get, ParseIntPipe, Post, Put, Query, } from '@nestjs/common';
+import { MemoCount } from 'src/common/interfaces';
 import { Memo } from 'src/entities';
 import { CreateMemoDto, UpdateMemoDto } from './dto';
 import { MemoService } from './memo.service';
@@ -16,10 +17,18 @@ export class MemoController {
     return await this.memoService.getMemos(userId);
   }
 
+  @Get()
+  async getMemosByFolderName(
+    @Query('id', ParseIntPipe) userId: number,
+    @Query('fn') folderName: string,
+  ): Promise<Memo[]> {
+    return await this.memoService.getMemosByFolderName(userId, folderName);
+  }
+
   @Get('count')
   async getMemoCount(
     @Query('id', ParseIntPipe) userId: number,
-  ): Promise<any> {
+  ): Promise<MemoCount[]> {
     return await this.memoService.getMemoCount(userId);
   }
 
