@@ -10,6 +10,9 @@ export class UpdateMemoDto {
   @Column('boolean')
   publicMode: boolean;
 
-  @Column('text', { nullable: true })
+  @Column('varchar', { length: 33 })
+  folderName: string;
+
+  @Column('text')
   tags: string;
 };
