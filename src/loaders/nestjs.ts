@@ -32,7 +32,7 @@ export const nestjsLoader = async (app: NestExpressApplication) => {
     cookie: {
       httpOnly: true,
       secure: false,
-      maxAge: 900000,
+      maxAge: 1200000,
     },
     store: new RedisStore({ client: redisClient, logErrors: true }),
   }));
