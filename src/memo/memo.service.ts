@@ -52,6 +52,12 @@ export class MemoService {
     userId: number,
     ): Promise<MemoCount[]> {
     const folderCount = await this.memoQueryRepository.getMemoCount(userId);
+    const defaultValue = [{ folderName: '메모', count: 0 }];
+
+    if (!folderCount?.length) {
+      return defaultValue;
+    }
+
     return folderCount;
   }
 
