@@ -38,7 +38,7 @@ export class MemoService {
   async getMemosByFolderName(
     userId: number,
     folderName: string,
-  ): Promise<Memo[]> {
+    ): Promise<Memo[]> {
     const memos = await this.memoQueryRepository.getMemosByFolderName(userId, folderName);
 
     if (!memos?.length) {
@@ -50,7 +50,7 @@ export class MemoService {
 
   async getMemoCount(
     userId: number,
-  ): Promise<MemoCount[]> {
+    ): Promise<MemoCount[]> {
     const folderCount = await this.memoQueryRepository.getMemoCount(userId);
     return folderCount;
   }

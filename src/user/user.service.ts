@@ -16,7 +16,7 @@ export class UserService {
 
   async checkByEmail(
     email: string,
-    ) {
+    ): Promise<boolean> {
     const user = await this.userRepository.count({ email });
 
     if (user) {
@@ -28,7 +28,7 @@ export class UserService {
 
   async checkByNickname(
     nickname: string,
-    ) {
+    ): Promise<boolean> {
     const user = await this.userRepository.count({ nickname });
 
     if (user) {
