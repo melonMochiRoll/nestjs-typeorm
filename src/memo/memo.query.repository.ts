@@ -13,7 +13,6 @@ export class MemoQueryRepository extends Repository<Memo> {
       .addSelect('COUNT(*) AS count')
       .where('memo.userId = :userId', { userId })
       .groupBy('memo.folderName')
-      .cache(true)
       .getRawMany();
 
     return folderCount;
@@ -28,8 +27,8 @@ export class MemoQueryRepository extends Repository<Memo> {
       .from(Memo, 'memo')
       .where('memo.userId = :userId', { userId })
       .andWhere('memo.folderName = :folderName', { folderName })
-      .cache(true)
-      .getRawMany();
+      .orderBy('memo.updatedAt', 'DESC')
+      .getMany();
     
     return memos;
   }
