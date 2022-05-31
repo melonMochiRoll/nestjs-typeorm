@@ -21,4 +21,5 @@ export const ormConfig: TypeOrmModuleOptions = {
   charset: 'utf8mb4',
   keepConnectionAlive: true,
   synchronize: false,
+  timezone: 'Asia/Seoul',
 }
