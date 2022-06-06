@@ -40,11 +40,6 @@ export class MemoService {
     folderName: string,
     ): Promise<Memo[]> {
     const memos = await this.memoQueryRepository.getMemosByFolderName(userId, folderName);
-
-    if (!memos?.length) {
-      throw new NotFoundException('메모 정보를 찾지 못했습니다.');
-    }
-
     return memos;
   }
 
@@ -66,8 +61,6 @@ export class MemoService {
     ): Promise<boolean> {
     const qr = this.connection.createQueryRunner();
     const { tags, ...withoutTags } = createMemoDto;
-
-    await this.userService.findByNickname(withoutTags.author);
 
     await qr.connect();
     await qr.startTransaction();

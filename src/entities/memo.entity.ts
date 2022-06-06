@@ -9,9 +9,6 @@ export class Memo {
   @PrimaryGeneratedColumn({ type: 'int' })
   id: number;
 
-  @Column('varchar', { length: 16 })
-  author: string;
-
   @Column('varchar', { length: 1000 })
   contents: string;
 
