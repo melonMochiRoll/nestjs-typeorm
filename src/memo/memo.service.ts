@@ -36,6 +36,11 @@ export class MemoService {
     folderName: string,
     ): Promise<Memo[]> {
     const memos = await this.memoQueryRepository.getMemosByFolderName(userId, folderName);
+
+    if (!memos?.length) {
+      return [];
+    }
+    
     return memos;
   }
 

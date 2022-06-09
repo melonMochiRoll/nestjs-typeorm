@@ -11,13 +11,6 @@ export class MemoController {
   ) {}
 
   @Get()
-  async getMemos(
-    @Query('id', ParseIntPipe) userId: number,
-    ): Promise<Memo[]> {
-    return await this.memoService.getMemos(userId);
-  }
-
-  @Get()
   async getMemosByFolderName(
     @Query('id', ParseIntPipe) userId: number,
     @Query('fn') folderName: string,
