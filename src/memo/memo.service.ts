@@ -19,18 +19,6 @@ export class MemoService {
     private readonly tagService: TagService,
   ) {}
 
-  async getMemos(
-    userId: number,
-    ): Promise<Memo[]> {
-    const memos = await this.memoRepository.find({ userId });
-
-    if (!memos?.length) {
-      throw new NotFoundException('유저 정보를 찾지 못했습니다.');
-    }
-
-    return memos;
-  }
-
   async getMemosByFolderName(
     userId: number,
     folderName: string,
