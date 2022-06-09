@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Tag } from 'src/entities';
 import { TagController } from './tag.controller';
+import { TagQueryRepository } from './tag.query.repository';
 import { TagService } from './tag.service';
 
 @Module({
@@ -11,6 +12,10 @@ import { TagService } from './tag.service';
     ]),
   ],
   controllers: [ TagController ],
-  providers: [ TagService ]
+  providers: [
+    TagService,
+    TagQueryRepository,
+  ],
+  exports: [ TagService ],
 })
 export class TagModule {}
