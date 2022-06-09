@@ -46,13 +46,11 @@ export class TagService {
 
   async getMemosByTag(
     tag: string,
-  ): Promise<any> {
+  ): Promise<Memo[]> {
     const tagWithMemos = await this.tagQueryRepository.getMemosByTag(tag);
 
-    if (tagWithMemos?.length) {
-      const memos = tagWithMemos.map((ele: any) => ele.memos);
-      console.log(memos);
-      return memos;
+    if (tagWithMemos) {
+      return tagWithMemos.memos;
     }
   
     return [];
