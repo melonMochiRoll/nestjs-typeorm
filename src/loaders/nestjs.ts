@@ -4,17 +4,16 @@ import cookieParser from "cookie-parser";
 import session from "express-session";
 import helmet from "helmet";
 import passport from "passport";
-import { createClient } from 'redis';
 
 export const nestjsLoader = async (app: NestExpressApplication) => {
-  const RedisStore = require('connect-redis')(session);
-  const redisClient = createClient({
-    url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
-    password: process.env.REDIS_PASSWORD,
-  });
-  redisClient.on('error', (error: any) => {
-    console.error('Redis Client Error', error);
-  });
+  // const RedisStore = require('connect-redis')(session);
+  // const redisClient = createClient({
+  //   url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
+  //   password: process.env.REDIS_PASSWORD,
+  // });
+  // redisClient.on('error', (error: any) => {
+  //   console.error('Redis Client Error', error);
+  // });
 
   app.useGlobalPipes(new ValidationPipe() );
 
@@ -32,9 +31,9 @@ export const nestjsLoader = async (app: NestExpressApplication) => {
     cookie: {
       httpOnly: true,
       secure: false,
-      maxAge: 1200000,
+      // maxAge: 1200000,
     },
-    store: new RedisStore({ client: redisClient, logErrors: true }),
+    // store: new RedisStore({ client: redisClient, logErrors: true }),
   }));
   
   app.use(passport.initialize());
