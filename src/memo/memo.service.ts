@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { MemoCount } from 'src/common/interfaces';
 import { Memo, MemoTag, Tag } from 'src/entities';
 import { TagService } from 'src/tag';
-import { UserService } from 'src/user';
 import { Connection, Repository } from 'typeorm';
 import { CreateMemoDto, UpdateMemoDto } from './dto';
 import { MemoQueryRepository } from './memo.query.repository';
@@ -14,13 +13,10 @@ export class MemoService {
     private connection: Connection,
     @InjectRepository(Memo)
     private memoRepository: Repository<Memo>,
-    @InjectRepository(Tag)
-    private tagRepository: Repository<Tag>,
     @InjectRepository(MemoTag)
     private memoTagRepository: Repository<MemoTag>,
     private memoQueryRepository: MemoQueryRepository,
-    private userService: UserService,
-    private tagService: TagService,
+    private readonly tagService: TagService,
   ) {}
 
   async getMemos(
@@ -69,7 +65,7 @@ export class MemoService {
       
       await Promise.all(
         tags.split(';').map(async (tag: string) => {
-          if (!tag) {
+          if (!!tag) {
             return;
           }
           const searchOrCreatedTag =
