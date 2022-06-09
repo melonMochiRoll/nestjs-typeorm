@@ -6,12 +6,10 @@ export class TagQueryRepository extends Repository<Tag> {
   async getMemosByTag(
     tag: string,
   ): Promise<any> {
-    const result = await getRepository(Tag)
+    return await getRepository(Tag)
       .createQueryBuilder('tag')
       .leftJoinAndSelect('tag.memos', 'memo')
       .where('tag.tag = :tag', { tag })
-      .getMany();
-
-    return result;
+      .getOne();
   }
 }
