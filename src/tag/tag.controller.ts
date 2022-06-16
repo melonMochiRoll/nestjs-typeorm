@@ -1,5 +1,6 @@
-import { Controller, Get, Query } from '@nestjs/common';
-import { Memo, Tag } from 'src/entities';
+import { Controller, Get, ParseIntPipe, Query } from '@nestjs/common';
+import { MemoWithHasMore } from 'src/common/interfaces';
+import { Tag } from 'src/entities';
 import { TagService } from './tag.service';
 
 @Controller('api/tag')
@@ -18,7 +19,8 @@ export class TagController {
   @Get('memo')
   async getMemosByTag(
     @Query('tag') tag,
-  ): Promise<Memo[]> {
-    return await this.tagService.getMemosByTag(tag);
+    @Query('cs', ParseIntPipe) currentSequence,
+  ): Promise<MemoWithHasMore> {
+    return await this.tagService.getMemosByTag(tag, currentSequence);
   }
 }

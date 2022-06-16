@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Memo, Tag } from 'src/entities';
+import { MemoWithHasMore } from 'src/common/interfaces';
+import { Tag } from 'src/entities';
 import { Like, Repository } from 'typeorm';
 import { TagQueryRepository } from './tag.query.repository';
 
@@ -32,28 +33,30 @@ export class TagService {
     if (!keyword) {
       return [];
     }
-
+    
     const tag = await this.tagRepository.find({
       tag: Like(`%${keyword}%`),
     });
-
-    if (tag?.length) {
-      return tag;
-    }
     
-    return [];
+    return tag;
   }
 
   async getMemosByTag(
     tag: string,
-  ): Promise<Memo[]> {
-    const tagWithMemos = await this.tagQueryRepository.getMemosByTag(tag);
+    currentSequence: number,
+  ): Promise<MemoWithHasMore> {
+    const { id } = await this.getTag(tag);
+    const tagWithMemos = await this.tagQueryRepository.getMemosByTag(id, currentSequence);
+    const { count } = await this.tagQueryRepository.getMemoCountByTag(id);
 
-    if (tagWithMemos) {
-      return tagWithMemos.memos;
+    const memos = tagWithMemos.map((ele: any) => ele.memo);
+    const hasMore = count > currentSequence || false;
+
+    if (!tagWithMemos?.length) {
+      return { memos: [], hasMore };
     }
   
-    return [];
+    return { memos, hasMore };
   }
 
   async deleteTag(
