@@ -66,15 +66,17 @@ export class UserService {
     createUserDto: CreateUserDto,
     ): Promise<boolean> {
     const { email, nickname, password } = createUserDto;
+    const trimmedEmail = email.trim();
+    const trimmedNickname = nickname.trim();
     
-    await this.checkByEmail(email);
-    await this.checkByNickname(nickname);
+    await this.checkByEmail(trimmedEmail);
+    await this.checkByNickname(trimmedNickname);
 
     const hashedPassword = await bcrypt.hash(password, SALT_OR_ROUNDS);
     try {
       await this.userRepository.save({
-        email,
-        nickname,
+        email: trimmedEmail,
+        nickname: trimmedNickname,
         password: hashedPassword
       });
     } catch(e) {
