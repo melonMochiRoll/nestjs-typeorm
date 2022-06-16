@@ -19,6 +19,7 @@ export class MemoQueryRepository extends Repository<Memo> {
   async getMemosByFolderName(
     userId: number,
     folderName: string,
+    currentNumber: number,
   ): Promise<Memo[]> {
     return await getRepository(Memo)
       .createQueryBuilder('memo')
@@ -26,6 +27,7 @@ export class MemoQueryRepository extends Repository<Memo> {
       .where('memo.userId = :userId', { userId })
       .andWhere('memo.folderName = :folderName', { folderName })
       .orderBy('memo.updatedAt', 'DESC')
+      .take(currentNumber)
       .getMany();
   }
 }

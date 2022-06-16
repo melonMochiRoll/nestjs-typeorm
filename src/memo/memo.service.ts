@@ -1,6 +1,6 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MemoCount } from 'src/common/interfaces';
+import { MemoCount, MemoWithHasMore } from 'src/common/interfaces';
 import { Memo, MemoTag, Tag } from 'src/entities';
 import { TagService } from 'src/tag';
 import { Connection, Repository } from 'typeorm';
@@ -22,27 +22,31 @@ export class MemoService {
   async getMemosByFolderName(
     userId: number,
     folderName: string,
-    ): Promise<Memo[]> {
-    const memos = await this.memoQueryRepository.getMemosByFolderName(userId, folderName);
+    currentSequence: number,
+    ): Promise<MemoWithHasMore> {
+    const memos = await this.memoQueryRepository.getMemosByFolderName(userId, folderName, currentSequence);
+    const count = await this.memoQueryRepository.getMemoCount(userId);
+    const memoCount = count?.find((ele: MemoCount) => ele.folderName === folderName);
+    const hasMore = memoCount.count > currentSequence || false;
 
     if (!memos?.length) {
-      return [];
+      return { memos: [], hasMore };
     }
     
-    return memos;
+    return { memos, hasMore };
   }
 
   async getMemoCount(
     userId: number,
     ): Promise<MemoCount[]> {
-    const folderCount = await this.memoQueryRepository.getMemoCount(userId);
+    const memoCount = await this.memoQueryRepository.getMemoCount(userId);
     const defaultValue = [{ folderName: '메모', count: 0 }];
 
-    if (!folderCount?.length) {
+    if (!memoCount?.length) {
       return defaultValue;
     }
 
-    return folderCount;
+    return memoCount;
   }
 
   async createMemo(
