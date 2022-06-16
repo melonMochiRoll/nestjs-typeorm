@@ -62,12 +62,13 @@ export class MemoService {
       
       await Promise.all(
         tags.split(';').map(async (tag: string) => {
-          if (!!tag) {
+          const trimmedTag = tag.trim();
+          if (!trimmedTag) {
             return;
           }
           const searchOrCreatedTag =
-            await this.tagService.getTag(tag) ||
-            await qr.manager.getRepository(Tag).save({ tag });
+            await this.tagService.getTag(trimmedTag) ||
+            await qr.manager.getRepository(Tag).save({ tag: trimmedTag });
     
           await qr.manager.getRepository(MemoTag).save({
             memoId: createdMemo.id,
@@ -108,9 +109,13 @@ export class MemoService {
 
       await Promise.all(
         tags.split(';').map(async (tag: string) => {
+          const trimmedTag = tag.trim();
+          if (!trimmedTag) {
+            return;
+          }
           const searchOrCreatedTag =
-            await this.tagService.getTag(tag) ||
-            await qr.manager.getRepository(Tag).save({ tag });
+            await this.tagService.getTag(trimmedTag) ||
+            await qr.manager.getRepository(Tag).save({ tag: trimmedTag });
 
           const remainingTag = oldTagIds.findIndex(ele => ele === searchOrCreatedTag?.id);
           if (remainingTag > -1) {
