@@ -20,10 +20,12 @@ export class AuthService {
     }
 
     const compare = await bcrypt.compare(password, user.password);
+
     if (compare) {
       const { password, ...result } = user;
       return result;
     }
+    
     return null;
   }
 }
