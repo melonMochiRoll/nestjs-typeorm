@@ -2,7 +2,6 @@ import { Strategy } from 'passport-local';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from '../auth.service';
-import { UserHttpResponseMessageEnum } from 'src/common';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
@@ -14,9 +13,11 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
 
   async validate(email: string, password: string): Promise<any> {
     const user = await this.authService.validateUser(email, password);
+
     if (!user) {
-      throw new UnauthorizedException(UserHttpResponseMessageEnum.INVALID_LOGIN);
+      throw new UnauthorizedException('이메일 혹은 비밀번호를 확인 해 주세요');
     }
+    
     return user;
   }
 }

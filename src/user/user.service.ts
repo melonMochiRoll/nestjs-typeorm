@@ -2,7 +2,6 @@ import { ConflictException, Injectable, NotFoundException } from '@nestjs/common
 import { InjectRepository } from '@nestjs/typeorm';
 import bcrypt from 'bcrypt';
 import { SALT_OR_ROUNDS } from 'src/common/constants';
-import { UserHttpResponseMessageEnum } from 'src/common/enums';
 import { User } from 'src/entities';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto';
@@ -20,7 +19,7 @@ export class UserService {
     const user = await this.userRepository.count({ email });
 
     if (user) {
-      throw new ConflictException(UserHttpResponseMessageEnum.EXIST_EMAIL);
+      throw new ConflictException('이미 존재하는 이메일입니다.');
     }
     
     return true;
@@ -32,7 +31,7 @@ export class UserService {
     const user = await this.userRepository.count({ nickname });
 
     if (user) {
-      throw new ConflictException(UserHttpResponseMessageEnum.EXIST_NICKNAME);
+      throw new ConflictException('이미 존재하는 닉네임입니다.');
     }
 
     return true;
@@ -47,7 +46,7 @@ export class UserService {
       return user;
     }
 
-    throw new NotFoundException(UserHttpResponseMessageEnum.NOTEXIST_EMAIL);
+    throw new NotFoundException('존재하지 않는 이메일입니다.');
   }
 
   async findByNickname(
@@ -59,7 +58,7 @@ export class UserService {
       return user;
     }
 
-    throw new NotFoundException(UserHttpResponseMessageEnum.NOTEXIST_NICKNAME);
+    throw new NotFoundException('존재하지 않는 닉네임입니다.');
   }
   
   async createUser(
